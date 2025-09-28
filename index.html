@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Farm Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green-primary: #4CAF50;
+            --green-light: #e8f5e9;
+            --gray-text: #555;
+            --border-color: #ddd;
+            --background-color: #f0f4f7;
+            --success-dot: #28a745;
+            --dark-green-bg: #4c8a5a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--background-color);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-logo img {
+            height: 40px;
+        }
+
+        .navbar-logo .title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .navbar-logo .tagline {
+            font-size: 0.8rem;
+            color: var(--gray-text);
+        }
+
+        .navbar-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar-menu a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .navbar-menu a:hover,
+        .navbar-menu a.active {
+            background-color: var(--green-primary);
+            color: white;
+        }
+
+        .section {
+            padding: 80px 40px;
+            text-align: center;
+        }
+
+        .hero-section {
+            /* Changed CSS to add a background image */
+            background-color: var(--green-light);
+            background-image: url('data:image/jpeg;base64,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');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 40px;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: var(--gray-text);
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .hero-buttons .btn {
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .hero-buttons .btn-primary {
+            background-color: var(--green-primary);
+            color: white;
+            border: none;
+        }
+
+        .hero-buttons .btn-secondary {
+            background-color: white;
+            color: var(--green-primary);
+            border: 2px solid var(--green-primary);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .stat-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            min-width: 250px;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--green-primary);
+        }
+
+        .stat-card p {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .how-it-works-section h2,
+        .why-choose-us-section h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .how-it-works-section p,
+        .why-choose-us-section p {
+            font-size: 1rem;
+            color: var(--gray-text);
+            margin-bottom: 40px;
+        }
+
+        .how-it-works-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .step-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 250px;
+        }
+
+        .step-card img {
+            height: 60px;
+            margin-bottom: 15px;
+        }
+        
+        .step-card h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .step-card p {
+            font-size: 0.9rem;
+            color: var(--gray-text);
+        }
+
+        .why-choose-us-section {
+            background-color: var(--dark-green-bg);
+            color: white;
+        }
+
+        .why-choose-us-section h2,
+        .why-choose-us-section p {
+            color: white;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .benefit-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .benefit-card img {
+            height: 40px;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="navbar-logo">
+            
+            <div>
+                <div class="title">🌱Smart Farm Assistant</div>
+                <div class="tagline">Farming Guidance System By Using IOT</div>
+            </div>
+        </div>
+        <div class="navbar-menu">
+            <a href="index.html" class="active">Home</a>
+            <a href="farmdata.html">Farm Data</a>
+            <a href="results.html">Results</a>
+            <a href="monitoring.html">Monitoring</a>
+            <a href="profile.html">Profile</a>
+            
+        </div>
+    </div>
+
+    <div class="hero-section">
+        <h1>Transform Your Farming with IOT Technology</h1>
+        <p>Get personalized crop recommendations, yield predictions, and market insights powered by advanced IOT. Make smarter farming decisions today.</p>
+        <div class="hero-buttons">
+            <a href="farmdata.html" class="btn btn-primary">Start Farm Analysis</a>
+            <a href="https://youtu.be/hXC7vCcg2xo?si=BgQxtBqy8em5AUBk" class="btn btn-secondary">Watch Demo</a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-card">
+                <h3>10,000+</h3>
+                <p>Farmers Helped</p>
+            </div>
+            <div class="stat-card">
+                <h3>95%</h3>
+                <p>Accuracy Rate</p>
+            </div>
+            <div class="stat-card">
+                <h3>30%</h3>
+                <p>Yield Increase</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="made-in-bolt" style="text-align: right; padding: 10px 50px; font-size: 0.8rem; color: #555;">
+    
+    </div>
+
+    <hr>
+
+    <div class="section how-it-works-section">
+        <h2>How It Works</h2>
+        <p>Simple 4-step process to get farming guidance by IOT</p>
+        <div class="how-it-works-cards">
+            <div class="step-card">
+               <!-- <img src="https://via.placeholder.com/60/7b68ee/ffffff?text=1" alt="Step 1 Icon">-->
+                <h4>Step 1</h4>
+                <h3>Easy Data Input</h3>
+                <p>Simple forms to enter soil data, crop history, and location details</p>
+            </div>
+            <div class="step-card">
+               <!-- <img src="https://via.placeholder.com/60/9400d3/ffffff?text=2" alt="Step 2 Icon">-->
+                <h4>Step 2</h4>
+                <h3>IOT Processing</h3>
+                <p>IOT machine learning models analyze your farm data</p>
+            </div>
+            <div class="step-card">
+               <!-- <img src="https://via.placeholder.com/60/3cb371/ffffff?text=3" alt="Step 3 Icon">-->
+                <h4>Step 3</h4>
+                <h3>Smart Recommendations</h3>
+                <p>Get crop suggestions, yield predictions, and market forecasts</p>
+            </div>
+            <div class="step-card">
+               <!-- <img src="https://via.placeholder.com/60/ffa500/ffffff?text=4" alt="Step 4 Icon">-->
+                <h4>Step 4</h4>
+                <h3>Continuous Monitoring</h3>
+                <p>24/7 guidance with weather alerts and price notifications</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="made-in-bolt" style="text-align: right; padding: 10px 50px; font-size: 0.8rem; color: #555;">
+        
+    </div>
+
+    <hr>
+
+    <div class="section why-choose-us-section">
+        <h2>Why Choose Smart Farm Assistant?</h2>
+        <p>Proven benefits for modern farmers</p>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+               <!-- <img src="https://via.placeholder.com/40/ffffff/555?text=🌱" alt="Crop Yield Icon">-->
+                <p>Increase crop yield by up to 30%</p>
+            </div>
+            <div class="benefit-card">
+               <!-- <img src="https://via.placeholder.com/40/ffffff/555?text=🧠" alt="AI Icon">-->
+                <p>Optimize farming decisions with IOT</p>
+            </div>
+            <div class="benefit-card">
+                <!--<img src="https://via.placeholder.com/40/ffffff/555?text=🌦️" alt="Weather Icon">-->
+                <p>Get weather-based recommendations</p>
+            </div>
+            <div class="benefit-card">
+               <!-- <img src="https://via.placeholder.com/40/ffffff/555?text=📍" alt="Location Icon">-->
+                <p>Location-specific farming advice</p>
+            </div>
+            <div class="benefit-card">
+               <!-- <img src="https://via.placeholder.com/40/ffffff/555?text=🗣️" alt="Language Icon">-->
+                <p>Available in multiple local languages</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

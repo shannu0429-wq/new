@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Farm Assistant - Sign Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --green-primary: #4CAF50; --border-color: #ddd; --background-color: #f0f4f7; --dark-green-bg: #4c8a5a; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); display: flex; flex-direction: column; min-height: 100vh; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; background: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .navbar-logo .title { font-size: 1.5rem; font-weight: 600; }
+        .navbar-logo .tagline { font-size: 0.8rem; color: #555; }
+        .auth-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+        .auth-form-box { background-color: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 450px; width: 100%; }
+        .auth-form-box h1 { text-align: center; color: var(--green-primary); margin-bottom: 25px; font-size: 2rem; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 8px; color: #333; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; }
+        .submit-button { margin-top: 30px; }
+        .submit-button button { width: 100%; padding: 12px 30px; background-color: var(--green-primary); color: white; border: none; border-radius: 25px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: background-color 0.3s; }
+        .submit-button button:hover { background-color: var(--dark-green-bg); }
+        .form-footer { text-align: center; margin-top: 20px; font-size: 0.9rem; }
+        .form-footer a { color: var(--green-primary); text-decoration: none; font-weight: 600; }
+        .navbar-menu { display: flex; align-items: center; gap: 20px; }
+        .navbar-menu a { text-decoration: none; color: #555; font-weight: 500; padding: 8px 15px; border-radius: 20px; transition: background-color 0.3s, color 0.3s; }
+        .navbar-menu a.active { background-color: var(--green-primary); color: white; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-logo">
+            <div>
+                <div class="title">🌱Smart Farm Assistant</div>
+                <div class="tagline">Farming Guidance System By Using IOT</div>
+            </div>
+        </div>
+        <div class="navbar-menu">
+            <a href="index.html">Home</a>
+            <a href="farmdata.html">Farm Data</a>
+            <a href="results.html">Results</a>
+            <a href="monitoring.html">Monitoring</a>
+            
+            <a href="signup.html" class="active">Sign Up</a>
+            <a href="profile.html">Profile</a>
+        </div>
+    </div>
+    
+    <div class="auth-container">
+        <div class="auth-form-box">
+            <h1>Create Your Account</h1>
+            
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email address" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="mobile">Mobile Number</label>
+                    <input type="tel" id="mobile" placeholder="Enter your 10-digit mobile number" required pattern="[0-9]{10}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Choose a unique username (only numbers)" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Create a password" required>
+                </div>
+                
+                <div class="submit-button">
+                    <button type="submit">Sign Up</button>
+                </div>
+            </form>
+            
+            <p class="form-footer">
+                Already have an account? <a href="login.html">Log In</a>
+            </p>
+        </div>
+    </div>
+
+<script>
+document.getElementById('signup-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+
+    if (username.length < 3 || password.length < 6) {
+        alert('Username must be at least 3 characters and password at least 6 characters.');
+        return;
+    }
+
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+
+    if (users[username]) {
+        alert(`Username '${username}' already exists. Please choose another.`);
+        return;
+    }
+
+    // Save the new user with all collected data
+    users[username] = { 
+        username: username, 
+        password: password,
+        fullName: fullName, 
+        email: email,
+        mobile: mobile
+    };
+    localStorage.setItem('users', JSON.stringify(users));
+
+    alert(`Sign Up successful for ${username}! Please log in.`);
+    window.location.href = "login.html";
+});
+</script>
+</body>
+</html>

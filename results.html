@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Farm Assistant - Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green-primary: #4CAF50;
+            --green-light: #e8f5e9;
+            --gray-text: #555;
+            --background-color: #f0f4f7;
+            --dark-green-bg: #4c8a5a;
+            --red-alert: #dc3545;
+            --yellow-warn: #ffc107;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); line-height: 1.6; color: #333; }
+        
+        /* Navigation Bar */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; background: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .navbar-logo .title { font-size: 1.5rem; font-weight: 600; }
+        .navbar-logo .tagline { font-size: 0.8rem; color: var(--gray-text); }
+        .navbar-menu { display: flex; align-items: center; gap: 20px; }
+        .navbar-menu a { text-decoration: none; color: #555; font-weight: 500; padding: 8px 15px; border-radius: 20px; transition: background-color 0.3s, color 0.3s; }
+        .navbar-menu a.active { background-color: var(--green-primary); color: white; }
+
+        /* Result Box */
+        .container { display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; }
+        .result-box { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 800px; width: 100%; line-height: 1.8; }
+        
+        h2 { color: var(--green-primary); margin-bottom: 15px; border-bottom: 2px solid var(--green-light); padding-bottom: 10px; }
+        h3 { color: var(--dark-green-bg); margin-top: 20px; margin-bottom: 10px; }
+        
+        .section { margin-bottom: 25px; padding: 10px 0; }
+        
+        .info-pair { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #eee; }
+        .info-pair:last-of-type { border-bottom: none; }
+        
+        .info-pair .label { font-weight: 500; color: #333; }
+        .info-pair .value { font-weight: 600; color: var(--gray-text); }
+        
+        /* Cost Specific Styles */
+        .cost-section .info-pair .value { color: var(--red-alert); }
+        .total { 
+            font-size: 1.4rem; 
+            font-weight: 700; 
+            color: var(--green-primary); 
+            margin-top: 20px; 
+            border-top: 3px solid var(--green-primary); 
+            padding-top: 15px; 
+            text-align: center;
+        }
+        .missing-data-box {
+            background-color: #ffe0e6;
+            color: var(--red-alert);
+            border: 2px solid var(--red-alert);
+            text-align: center;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="navbar-logo">
+            <div>
+                <div class="title">🌱 Smart Farm Assistant</div>
+                <div class="tagline">Farming Guidance System By Using IOT</div>
+            </div>
+        </div>
+        <div class="navbar-menu">
+            <a href="index.html">Home</a>
+            <a href="farmdata.html">Farm Data</a>
+            <a href="results.html" class="active">Results</a>
+            <a href="monitoring.html">Monitoring</a>
+            <a href="profile.html">Profile</a>
+            
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="result" class="result-box">
+            <h1>Processing Recommendations...</h1>
+            <p style="text-align: center;">If this message persists, please check your login status.</p>
+        </div>
+    </div>
+
+<script>
+// --- Configuration ---
+const USER_DATA_KEY = "currentUser";
+const FORM_DATA_PREFIX = "farmData_";
+const PH_OPTIMAL = 6.5;
+
+// --- Global Functions ---
+function logoutUser() {
+    localStorage.removeItem(USER_DATA_KEY);
+    alert('You have been successfully logged out.');
+    window.location.href = "login.html";
+}
+
+// --- CORE SCRIPT: SECURITY CHECK and DATA LOADING ---
+document.addEventListener('DOMContentLoaded', function() {
+    const currentUsername = localStorage.getItem(USER_DATA_KEY);
+    const resultDiv = document.getElementById('result');
+
+    // 1. SECURITY CHECK: Ensure user is logged in
+    if (!currentUsername) {
+        alert('You must be logged in to view the results.');
+        window.location.href = "login.html"; 
+        return; // Stop execution
+    }
+
+    // 2. DATA LOADING (Use the user-specific key)
+    const farmDataString = localStorage.getItem(FORM_DATA_PREFIX + currentUsername);
+
+    if (!farmDataString) {
+        resultDiv.innerHTML = `
+            <div class="result-box missing-data-box">
+                <h2>⚠️ Data Missing</h2>
+                <p>No farm data found for user <span style="font-weight:700;">${currentUsername}</span>. Please go to the Farm Data tab to enter your details.</p>
+                <p style="margin-top:10px;"><a href="farmdata.html" style="color:var(--red-alert); text-decoration: underline;">Go to Farm Data Page</a></p>
+            </div>
+        `;
+        return;
+    }
+
+    // 3. Parse Data
+    const data = JSON.parse(farmDataString);
+
+    // 4. Generate Soil Recommendation (Example Logic)
+    let soilRecommendation = '';
+    if (data.ph < PH_OPTIMAL - 0.5) {
+        soilRecommendation = `The soil pH is low (${data.ph}). Recommendation: Apply Lime to raise pH for better nutrient availability.`;
+    } else if (data.ph > PH_OPTIMAL + 0.5) {
+        soilRecommendation = `The soil pH is high (${data.ph}). Recommendation: Apply Sulfur or Gypsum to lower pH and improve soil structure.`;
+    } else {
+        soilRecommendation = `The soil pH (${data.ph}) is optimal. Focus on maintaining nutrient balance.`;
+    }
+    
+    // 5. Generate NPK Recommendation (Example Logic)
+    let NPKRecommendation = [];
+    if (data.N < 100) NPKRecommendation.push(`Nitrogen (N): Low and Apply a high-N fertilizer like Urea.`);
+    if (data.P < 80) NPKRecommendation.push(`Phosphorus (P): Low and  Apply DAP or Superphosphate.`);
+    if (data.K < 60) NPKRecommendation.push(`Potassium (K): Low and Apply Muriate of Potash (MOP).`);
+    
+    if (NPKRecommendation.length === 0) {
+        NPKRecommendation.push("NPK Levels: All levels are currently satisfactory. Continue monitoring.");
+    }
+
+
+    // 6. Display Results
+    resultDiv.innerHTML = `
+        <h2>✅ Your Smart Farm Recommendations</h2>
+        <p style="text-align: center;">Analysis for <span style="font-weight: 600;">${currentUsername}</span> | Data from ${data.timestamp ? new Date(data.timestamp).toLocaleString() : 'N/A'}</p>
+
+        <div class="section">
+            <h3>🚜 Input Summary</h3>
+            <div class="info-pair"><span class="label">Location:</span><span class="value">${data.location}</span></div>
+            <div class="info-pair"><span class="label">Previous Crop:</span><span class="value">${data.prevCrop}</span></div>
+            <div class="info-pair"><span class="label">Soil Type:</span><span class="value">${data.soilType}</span></div>
+            <div class="info-pair"><span class="label">Avg Temperature:</span><span class="value">${data.temp}°C</span></div>
+        </div>
+
+        <div class="section">
+            <h3>🧪 Soil and Nutrient Metrics</h3>
+            <div class="info-pair"><span class="label">pH Level:</span><span class="value">${data.ph.toFixed(1)} (Optimal: ${PH_OPTIMAL})</span></div>
+            <div class="info-pair"><span class="label">Soil Moisture:</span><span class="value">${data.moisture}%</span></div>
+            <div class="info-pair"><span class="label">Nitrogen (N):</span><span class="value">${data.N} kg/ha</span></div>
+            <div class="info-pair"><span class="label">Phosphorus (P):</span><span class="value">${data.P} kg/ha</span></div>
+            <div class="info-pair"><span class="label">Potassium (K):</span><span class="value">${data.K} kg/ha</span></div>
+        </div>
+        
+        <div class="section">
+            <h3>💡 Detailed Recommendations</h3>
+            <h4>Soil Treatment:</h4>
+            <p>${soilRecommendation}</p>
+            
+            <h4 style="margin-top:15px;">Nutrient Adjustment:</h4>
+            <ul style="list-style-type: none; padding-left: 0;">
+                ${NPKRecommendation.map(item => `<li>${item}</li>`).join('')}
+            </ul>
+        </div>
+        
+        <div class="section cost-section">
+            <h3>💰 Estimated Cost Breakdown (₹)</h3>
+            <div class="info-pair"><span class="label">Fertilizer Cost:</span><span class="value">₹${data.fertilizerCost.toFixed(2)}</span></div>
+            <div class="info-pair"><span class="label">Irrigation Cost:</span><span class="value">₹${data.irrigationCost.toFixed(2)}</span></div>
+            <div class="info-pair"><span class="label">Soil Treatment Cost:</span><span class="value">₹${data.soilTreatmentCost.toFixed(2)}</span></div>
+            <div class="info-pair"><span class="label">IoT Maintenance Cost:</span><span class="value">₹${data.IoTCost.toFixed(2)}</span></div>
+        </div>
+
+        <div class="total">
+            ✨ Projected Total Farm Cost: ₹${data.totalCost.toFixed(2)}
+        </div>
+    `;
+});
+</script>
+</body>
+</html>

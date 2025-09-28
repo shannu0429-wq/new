@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Farm Assistant - Farm Data</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --green-primary: #4CAF50; --green-light: #e8f5e9; --gray-text: #555; --border-color: #ddd; --background-color: #f0f4f7; --success-dot: #28a745; --dark-green-bg: #4c8a5a; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; line-height: 1.6; color: #333; background-color: var(--background-color); }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; background: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .navbar-logo { display: flex; align-items: center; gap: 10px; }
+        .navbar-logo .title { font-size: 1.5rem; font-weight: 600; }
+        .navbar-logo .tagline { font-size: 0.8rem; color: var(--gray-text); }
+        .navbar-menu { display: flex; align-items: center; gap: 20px; }
+        .navbar-menu a { text-decoration: none; color: #555; font-weight: 500; padding: 8px 15px; border-radius: 20px; transition: background-color 0.3s, color 0.3s; }
+        .navbar-menu a:hover, .navbar-menu a.active { background-color: var(--green-primary); color: white; }
+        .main-container { padding: 20px; max-width: 950px; margin: 20px auto; }
+        .form-section-container { background-color: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; gap: 40px; flex-wrap: wrap; }
+        .form-column { flex: 1; min-width: 300px; background-color: #e8f5e9; padding: 20px; border-radius: 12px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 5px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+        .submit-button { text-align: center; margin-top: 20px; }
+        .submit-button button { padding: 12px 30px; background-color: #4CAF50; color: white; border: none; border-radius: 25px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.3s; }
+        .submit-button button:hover { background-color: var(--dark-green-bg); }
+        .iot-sensors-status-box { margin-top: 20px; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; background-color: #f9f9f9; }
+        .status-title { font-weight: 600; color: var(--green-primary); margin-bottom: 10px; display: flex; align-items: center; }
+        .sensor-state.active { color: var(--success-dot); }
+        .fa-network-wired::before { content: "⚙️"; margin-right: 5px; }
+        .welcome-message { text-align: center; margin-bottom: 10px; font-weight: 600; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-logo">
+            <div>
+                <div class="title">🌱Smart Farm Assistant</div>
+                <div class="tagline">Farming Guidance System By Using IOT</div>
+            </div>
+        </div>
+        <div class="navbar-menu">
+            <a href="index.html">Home</a>
+            <a href="farmdata.html" class="active">Farm Data</a> 
+            <a href="results.html">Results</a>
+            <a href="monitoring.html">Monitoring</a>
+            <a href="profile.html">Profile</a>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="welcome-message" id="welcome-user"></div>
+
+        <h1 style="text-align:center;">Tell Us About Your Farm</h1>
+        <h3 style="text-align:center;">Enter your farm details to get IOT recommendation</h3>
+
+        <form id="farm-data-form">
+            <div class="form-section-container">
+                <div class="form-column">
+                    <h3>Soil Information</h3>
+                    <div class="form-group"><label for="soil-type">Soil Type</label>
+                        <select id="soil-type" required>
+                            <option value="">Select soil type</option><option value="Sandy">Sandy</option>
+                            <option value="Loamy">Loamy</option><option value="Clay">Clay</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label for="ph-level">pH Level</label>
+                        <input type="number" step="0.1" id="ph-level" placeholder="e.g. 6.5" required>
+                    </div>
+                    <div class="form-group"><label for="moisture">Soil Moisture %</label>
+                        <input type="number" id="moisture" placeholder="e.g. 45" required>
+                    </div>
+                    <div class="form-group"><label for="nitrogen">Nitrogen (N)</label>
+                        <input type="number" id="nitrogen" placeholder="e.g. 80" required>
+                    </div>
+                    <div class="form-group"><label for="phosphorus">Phosphorus (P)</label>
+                        <input type="number" id="phosphorus" placeholder="e.g. 60" required>
+                    </div>
+                    <div class="form-group"><label for="potassium">Potassium (K)</label>
+                        <input type="number" id="potassium" placeholder="e.g. 40" required>
+                    </div>
+                </div>
+
+                <div class="form-column">
+                    <h3>Farm Details</h3>
+                    <div class="form-group"><label for="location">Location</label>
+                        <input type="text" id="location" placeholder="Enter city, state" required>
+                    </div>
+                    <div class="form-group"><label for="prev-crop">Previous Crop</label>
+                        <select id="prev-crop" required>
+                            <option value="">Select previous crop</option><option value="Corn">Corn</option>
+                            <option value="Soybeans">Soybeans</option><option value="Rice">Rice</option>
+                            <option value="Wheat">Wheat</option><option value="Cotton">Cotton</option>
+                            <option value="Sugarcane">Sugarcane</option><option value="No Previous Crop">No previous crop</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label for="temp">Average Temperature (°C)</label>
+                        <input type="number" id="temp" placeholder="e.g. 25" required>
+                        <div class="iot-sensors-status-box">
+                            <h5 class="status-title"><i class="fas fa-network-wired"></i> IoT Sensors Status</h5>
+                            <div class="status-items-container">
+                                <div class="sensor-status-item"><span class="status-dot active-dot"></span><span class="sensor-name">Soil Monitor:</span><span class="sensor-state active">Active</span></div>
+                                <div class="sensor-status-item"><span class="status-dot active-dot"></span><span class="sensor-name">Weather Station:</span><span class="sensor-state active">Active</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="submit-button">
+                <button type="submit">Get IOT Recommendation</button>
+            </div>
+        </form>
+    </div>
+
+<script>
+// --- Configuration ---
+const MAX_FREE_SUBMISSIONS = 5; 
+const MAX_PREMIUM_SUBMISSIONS = 30; // New limit after payment/upgrade
+const UPGRADE_URL = "upgrade.html"; 
+const USER_DATA_KEY = "currentUser";
+const PREMIUM_STATUS_KEY = "isPremium_"; // Key to store premium status (user-specific)
+const FORM_DATA_PREFIX = "farmData_";
+const SUBMISSION_COUNT_PREFIX = "farmSubmissionCount_";
+
+// --- Login Enforcement ---
+const currentUser = localStorage.getItem(USER_DATA_KEY);
+if (!currentUser) {
+    alert('You must log in to access the farm data form.');
+    window.location.href = 'login.html'; // Ensure this is your login page
+} else {
+    // Update the welcome message if logged in
+    document.getElementById('welcome-user').innerText = `Welcome, ${currentUser}!`;
+}
+
+// --- Cost Calculation Logic ---
+function calculateTotalCost(data) {
+    // Recommended values for a generic crop (can be made dynamic)
+    const N_req = 100, P_req = 80, K_req = 60, M_req = 50, pH_req = 6.5;
+
+    // Placeholder Costs (Cost per unit deficiency or flat fee)
+    const C_N = 2, C_P = 3, C_K = 2.5; // Cost per unit (e.g., kg/ha) of N, P, K needed
+    const C_w = 1;                     // Cost per unit (%) of moisture deficiency (e.g., per 1% below 50%)
+    const C_treatment = 10;            // Cost per unit of pH deviation (e.g., per 0.1 pH deviation from 6.5)
+    const C_soilmonitor = 50;          // Flat fee for IoT Soil Monitor maintenance
+    const C_weatherstation = 50;       // Flat fee for IoT Weather Station maintenance
+
+    // 1. Fertilizer Cost (only calculate cost for deficiency, Math.max(0, ...) ensures cost is 0 if level is sufficient)
+    const fertilizerCost = 
+        Math.max(0, (N_req - data.N) * C_N) + 
+        Math.max(0, (P_req - data.P) * C_P) + 
+        Math.max(0, (K_req - data.K) * C_K);
+
+    // 2. Irrigation Cost
+    const irrigationCost = Math.max(0, (M_req - data.moisture) * C_w);
+
+    // 3. Soil Treatment Cost (e.g., lime for low pH, sulfur for high pH)
+    const soilTreatmentCost = Math.abs(pH_req - data.ph) * 10 * C_treatment; // Multiply by 10 for better scale
+
+    // 4. IoT Cost (Flat fee for using the system/sensors)
+    const IoTCost = C_soilmonitor + C_weatherstation;
+
+    const totalCost = fertilizerCost + irrigationCost + soilTreatmentCost + IoTCost;
+
+    return { fertilizerCost, irrigationCost, soilTreatmentCost, IoTCost, totalCost };
+}
+
+
+// --- Form Submission Logic ---
+document.getElementById('farm-data-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const SUBMISSION_COUNT_KEY = SUBMISSION_COUNT_PREFIX + currentUser;
+    const PREMIUM_KEY = PREMIUM_STATUS_KEY + currentUser;
+    
+    let submissionCount = parseInt(localStorage.getItem(SUBMISSION_COUNT_KEY)) || 0; 
+    
+    // Check if the user is a premium member
+    const isPremium = localStorage.getItem(PREMIUM_KEY) === 'true';
+    const currentLimit = isPremium ? MAX_PREMIUM_SUBMISSIONS : MAX_FREE_SUBMISSIONS;
+
+    // --- Submission Limit Check ---
+    if (submissionCount >= currentLimit) {
+        if (isPremium) {
+             // For premium users who might have hit the 30 limit
+             alert(`${currentUser}, you have reached the premium submission limit of ${currentLimit}. Please contact support for an enterprise plan.`);
+        } else {
+            // For free users who hit the 5 limit
+            alert(`${currentUser}, you have reached the free limit of ${currentLimit} submissions. Please upgrade to premium for ${MAX_PREMIUM_SUBMISSIONS} submissions.`);
+            window.location.href = UPGRADE_URL;
+        }
+        return; 
+    }
+
+    // 1. Collect Form Data
+    const data = {
+        soilType: document.getElementById('soil-type').value, 
+        ph: parseFloat(document.getElementById('ph-level').value),
+        moisture: parseFloat(document.getElementById('moisture').value), 
+        N: parseFloat(document.getElementById('nitrogen').value),
+        P: parseFloat(document.getElementById('phosphorus').value), 
+        K: parseFloat(document.getElementById('potassium').value),
+        location: document.getElementById('location').value, 
+        prevCrop: document.getElementById('prev-crop').value,
+        temp: parseFloat(document.getElementById('temp').value)
+    };
+
+    // 2. Calculate Costs
+    const costs = calculateTotalCost(data);
+
+    // 3. Combine Data and Costs
+    const farmResults = {
+        ...data, // Contains all input data
+        ...costs, // Contains all cost breakdowns and totalCost
+        timestamp: new Date().toISOString()
+    };
+
+    // 4. Save User-Specific Results
+    localStorage.setItem(FORM_DATA_PREFIX + currentUser, JSON.stringify(farmResults));
+    
+    // 5. Update Submission Count
+    submissionCount++;
+    localStorage.setItem(SUBMISSION_COUNT_KEY, submissionCount);
+    
+    // 6. Redirect to Results
+    window.location.href = "results.html";
+});
+
+/* * NOTE: Logic for setting Premium Status (for use on upgrade.html or upon payment success)
+ * This function should be executed AFTER a user completes payment to grant them the 30 submission limit.
+ * * function grantPremiumStatus() {
+ * const currentUser = localStorage.getItem(USER_DATA_KEY);
+ * if (currentUser) {
+ * localStorage.setItem(PREMIUM_STATUS_KEY + currentUser, 'true');
+ * alert(`Congratulations ${currentUser}! Your account has been upgraded. You now have a submission limit of ${MAX_PREMIUM_SUBMISSIONS}.`);
+ * window.location.href = 'farmdata.html';
+ * }
+ * }
+*/
+</script>
+</body>
+</html>

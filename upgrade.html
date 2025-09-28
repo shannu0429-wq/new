@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Farm Assistant - Upgrade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green-primary: #4CAF50;
+            --background-color: #f0f4f7;
+            --whatsapp-green: #25D366;
+            --red-alert: #dc3545;
+            --dark-green-bg: #4c8a5a;
+            --blue-info: #007bff;
+            --premium-color: #ffc107; /* Gold/Yellow for Premium */
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); line-height: 1.6; color: #333; text-align: center; }
+        
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; background: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .navbar-logo .title { font-size: 1.5rem; font-weight: 600; }
+        .navbar-logo .tagline { font-size: 0.8rem; color: #555; }
+        .navbar-menu { display: flex; align-items: center; gap: 20px; }
+        .navbar-menu a { text-decoration: none; color: #555; font-weight: 500; padding: 8px 15px; border-radius: 20px; transition: background-color 0.3s, color 0.3s; }
+        .navbar-menu a:hover, .navbar-menu a.active { background-color: var(--green-primary); color: white; }
+        
+        .upgrade-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .upgrade-container h1 { color: var(--premium-color); margin-bottom: 10px; }
+        .limit-message { color: var(--red-alert); font-weight: 600; margin-bottom: 25px; }
+        
+        /* Plan Box */
+        .plan-box { 
+            border: 2px solid var(--dark-green-bg); 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin-top: 30px; 
+            background-color: #f7fcf7; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .plan-box h2 { color: var(--dark-green-bg); margin-bottom: 15px; font-weight: 700; }
+        .plan-box p { font-size: 1.1rem; }
+        
+        /* WhatsApp Button */
+        .whatsapp-button {
+            padding: 15px 40px; 
+            background-color: var(--whatsapp-green); 
+            color: white; 
+            border: none; 
+            border-radius: 30px; 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 20px; 
+            transition: background-color 0.3s;
+            display: inline-flex; 
+            align-items: center; 
+            text-decoration: none;
+        }
+        .whatsapp-button:hover { background-color: #128C7E; }
+        .whatsapp-icon { width: 20px; height: 20px; margin-right: 10px; filter: brightness(0) invert(1); }
+        
+        /* Confirmation Box */
+        .reset-section { margin-top: 30px; padding: 20px; border: 2px solid var(--premium-color); border-radius: 10px; background-color: #fff8e1; text-align: left;}
+        .reset-section h3 { color: #cc9900; margin-bottom: 15px; display: flex; align-items: center; }
+        .reset-section input { padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%; margin-bottom: 10px; }
+        .reset-button { padding: 10px 20px; background-color: var(--green-primary); color: white; border: none; border-radius: 20px; cursor: pointer; transition: background-color 0.3s; }
+        .reset-button:hover { background-color: var(--dark-green-bg); }
+
+        .manual-step { margin-top: 25px; padding: 15px; background-color: #e6f7ff; border: 1px solid var(--blue-info); border-radius: 8px; text-align: left; }
+        .manual-step h3 { color: var(--blue-info); }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-logo">
+            <div>
+                <div class="title">🌱Smart Farm Assistant</div>
+                <div class="tagline">Farming Guidance System By Using IOT</div>
+            </div>
+        </div>
+        <div class="navbar-menu">
+            <a href="index.html">Home</a>
+            <a href="farmdata.html">Farm Data</a>
+            <a href="results.html">Results</a>
+            <a href="monitoring.html">Monitoring</a>
+            <a href="profile.html">Profile</a>
+        </div>
+    </div>
+    
+    <div class="upgrade-container">
+        <h1>Unlock Premium Features</h1>
+        
+        <div class="limit-message">
+            You've reached your free limit. Follow the steps below to activate your premium plan!
+        </div>
+
+        <div class="plan-box">
+            <h2>Premium Plan - ₹199 / Month</h2>
+            <p>Get **30** data submissions per month, detailed analysis, and priority support.</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                Your current username is: <span id="current-user-display" style="font-weight: 600; color: #333;">...</span>
+            </p>
+            
+            <a href="#" id="whatsapp-link" class="whatsapp-button" onclick="proceedToWhatsApp(event)">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTEyIDBDNi40OCAwIDIgNC40OCAyIDEwYzAgMS43Ny40NiAzLjQxIDEuMjggNC44NmwtMS42NyA0LjgyYy0uMTMuMzguMDMgLjc4LjM5LjkzLjE3LjA2LjM0LjA5LjUxLjA5LjIxIDAgLjQxLS4wOC41Ni0uMjNsNS4wMi0xLjU4Yy44NS4yNyAxLjc1LjQxIDIuNjcuNDFjNS41MiAwIDEwLTQuNDggMTAtMTBTMTcuNTIgMCAxMiAwem00LjYgMTQuMWMtLjIgMC0uNS0uMS0uNy0uMy0uNS0uNC0xLjUtLjgtMS44LS45LS4xLS4xLS4yLS4xLS40LS4xLS4zIDAtLjYgLjQtLjguNi0uMy40LS41Ljc2LS44IDEuMTItLjUgLjQtLjkgLjUtMS4yLjUtLjMgMC0uNi0uMS0uOS0uMy0xLS43LTEuOS0xLjktMi42LTMuMi0uMy0uNi0uNC0xLjItLjQtMS41IDAtLjMtLjEtLjYtLjEtLjkuMS0uMy4zLS41LjUtLjcuMy0uMy42LS42LjgtLjguLjEtLjEuMi0uMi4zLS4zLjItLjIgMC0uNC0uMS0uNi0uMy0uMy0uNi0uNi0uOS0uOC0uMy0uMi0uNi0uMy0uOS0uMy0uMiAwLS41IDAtLjcgLjItLjIgMC0uNS4xLS43LjQtLjIgLjMtLjkgMS41LS45IDEuOCAw .My4zLjYtLjEuOC0uMSAxLjEuMSAxLjUuNCAyLjQuNiAzLjYgMS40IDQuNC41LjIgLjguMyAxLjEuMy4yIDAgLjUtLjEgLjctLjIuMy0uMi44LS44IDEuMS0xLjIuMi0uMy4zLS41LjUtLjguMi0uMi40LS4zLjctLjIuMiAwIC40LjIgLjYuMy0uMSAwIC4yLS4yIC4yLS4yTDE2LjYgMTZjLS4yLjItLjUuNC0uNy40eiIvPjwvc3ZnPg==" alt="WhatsApp Icon" class="whatsapp-icon">
+                Proceed via WhatsApp
+            </a>
+        </div>
+
+        <div class="manual-step">
+            <h3>Step 1: Initiate Payment</h3>
+            <ol style="padding-left: 20px;">
+                <li>Click the **"Proceed via WhatsApp"** button above.</li>
+                <li>Send the pre-filled message to our support team.</li>
+                <li>We will respond with our **UPI/Bank details** for the ₹199 payment.</li>
+            </ol>
+        </div>
+        
+        <div class="reset-section">
+            <h3>🔑 Step 2: Confirmation & Activation</h3>
+            <p>After you have paid and received the **unique Confirmation Code** from our support team, enter it below to activate your premium plan immediately.</p>
+            <form id="reset-form">
+                <input type="text" id="confirmation-code" placeholder="Enter the Confirmation Code here" required>
+                <button type="submit" class="reset-button">Activate Premium Plan</button>
+            </form>
+        </div>
+    </div>
+
+<script>
+const USER_DATA_KEY = "currentUser";
+const PREMIUM_STATUS_KEY = "isPremium_"; 
+const SUBMISSION_COUNT_PREFIX = "farmSubmissionCount_";
+const WHATSAPP_NUMBER = "919392799157"; // IMPORTANT: Replace with your actual WhatsApp business number (e.g., 91XXXXXXXXXX)
+const CORRECT_CODE_PREFIX = "FARM-PREMIUM-"; 
+
+document.addEventListener('DOMContentLoaded', function() {
+    const currentUser = localStorage.getItem(USER_DATA_KEY);
+    
+    if (!currentUser) {
+        alert('Please log in to access the upgrade page.');
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    document.getElementById('current-user-display').textContent = currentUser;
+    
+    document.getElementById('reset-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const enteredCode = document.getElementById('confirmation-code').value.trim().toUpperCase();
+        activatePremiumWithCode(enteredCode);
+    });
+});
+
+// --- Step 1: Initiate WhatsApp chat ---
+function proceedToWhatsApp(event) {
+    event.preventDefault(); 
+    
+    const currentUser = localStorage.getItem(USER_DATA_KEY);
+    if (!currentUser) return;
+
+    const message = encodeURIComponent(
+        `Hello, I would like to upgrade to the Premium Plan (₹199/month) for the Smart Farm Assistant.\n\nMy Username is: ${currentUser}\n\nPlease send me the payment details (UPI/Bank) to complete the transaction and receive the Confirmation Code. Thank you!`
+    );
+    
+    const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+    
+    window.open(whatsappURL, '_blank');
+    
+    alert(`A WhatsApp chat has been opened. Please send the message and wait for your Confirmation Code after payment.`);
+}
+
+// --- Step 2: Activate the Premium status using the received code ---
+function activatePremiumWithCode(enteredCode) {
+    const currentUser = localStorage.getItem(USER_DATA_KEY);
+    
+    if (enteredCode.startsWith(CORRECT_CODE_PREFIX) && enteredCode.length > 15) { 
+        
+        // 1. Set the Premium Status Flag
+        localStorage.setItem(PREMIUM_STATUS_KEY + currentUser, 'true');
+        
+        // 2. Reset the submission counter to 0 (since they have a new limit of 30)
+        localStorage.setItem(SUBMISSION_COUNT_PREFIX + currentUser, 0); 
+        
+        alert(`✅ Activation Successful! Your account is now Premium. You have 30 submissions unlocked!`);
+        
+        // Redirect back to the profile page to see the changes
+        window.location.href = "profile.html"; 
+        
+    } else {
+        alert("❌ Invalid Confirmation Code. Please ensure you have completed the payment and entered the exact code received from our support team.");
+    }
+}
+</script>
+</body>
+</html>
